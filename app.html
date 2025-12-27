@@ -308,8 +308,9 @@ body {
 
   async function loadStock() {
     const { data, error } = await supabase
-      .from("v_stock")
-      .select("name, price_paid, qty_purchased, unit_price, created_at")
+.from("v_stock")
+.select("name, total_paid, qty_total, avg_unit_price, created_at")
+
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -327,61 +328,72 @@ body {
     for (const p of data) {
       const card = document.createElement("div");
       card.className = "card";
+const unit = Number(p.avg_unit_price ?? 0);
 
-      const unit = Number(p.unit_price ?? 0);
-      card.innerHTML = `
-        <h4>${p.name}</h4>
+card.innerHTML = `
+  <h4>${p.name}</h4>
 
-        <div class="row">
-          <span>Quantità</span>
-          <strong>${p.qty_purchased}</strong>
-        </div>
+  <div class="row">
+    <span>Quantità</span>
+    <strong>${p.qty_total}</strong>
+  </div>
 
-        <div class="row">
-          <span>Prezzo unitario</span>
-          <strong>€ ${unit.toFixed(2)}</strong>
-        </div>
+  <div class="row">
+    <span>Prezzo medio unitario</span>
+    <strong>€ ${unit.toFixed(2)}</strong>
+  </div>
 
-        <div class="row">
-          <span>Totale pagato</span>
-          <strong>€ ${p.price_paid}</strong>
-        </div>
+  <div class="row">
+    <span>Totale pagato</span>
+    <strong>€ ${p.total_paid}</strong>
+  </div>
 
-        <div class="muted">Inserito il ${new Date(p.created_at).toLocaleString()}</div>
-      `;
+  <div class="muted">Aggiornato il ${new Date(p.created_at).toLocaleString()}</div>
+`;
+
 
       stockBox.appendChild(card);
     }
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    showError("");
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  showError("");
 
-    const name = nameEl.value.trim();
-    const price_paid = Number(priceEl.value);
-    const qty_purchased = Number(qtyEl.value);
+  const name = nameEl.value.trim();
+  const price_paid = Number(priceEl.value);
+  const qty_purchased = Number(qtyEl.value);
 
-    if (!name) return showError("Inserisci il nome prodotto.");
-    if (!Number.isFinite(price_paid) || price_paid < 0) return showError("Prezzo non valido.");
-    if (!Number.isFinite(qty_purchased) || qty_purchased < 0) return showError("Quantità non valida.");
+  if (!name) return showError("Inserisci il nome prodotto.");
+  if (!Number.isFinite(price_paid) || price_paid < 0) return showError("Prezzo non valido.");
+  if (!Number.isFinite(qty_purchased) || qty_purchased <= 0) return showError("Quantità non valida.");
 
-    const { error } = await supabase.from("products_min").insert({
-      owner_id: session.user.id,
-      name,
-      price_paid,
-      qty_purchased
-    });
-
-    if (error) return showError(error.message);
-
-    showOk("Salvato ✅");
-    await loadStock();
-    closeModal();
+  const { error } = await supabase.rpc("add_product_purchase", {
+    p_name: name,
+    p_price_paid: price_paid,
+    p_qty_purchased: qty_purchased
   });
+
+  if (error) return showError(error.message);
+
+  await loadStock();
+  closeModal();
+});
+
 
   // First load
   await loadStock();
+  supabase
+  .channel("products-live")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "products_min" },
+    async () => {
+      await loadStock();
+    }
+  )
+  .subscribe();
+
 </script>
 
 </html>
