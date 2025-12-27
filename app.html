@@ -387,24 +387,22 @@ let image_url = null;
 
 if (imageFile.files.length > 0) {
   const file = imageFile.files[0];
-  const ext = file.name.split(".").pop();
-  const fileName = `${crypto.randomUUID()}.${ext}`;
+  const ext = file.name.split(".").pop() || "jpg";
+  const filePath = `products/${crypto.randomUUID()}.${ext}`;
 
   const { error: uploadError } = await supabase.storage
     .from("product-images")
-    .upload(fileName, file, {
-      cacheControl: "3600",
-      upsert: false
-    });
+    .upload(filePath, file, { upsert: false });
 
   if (uploadError) return showError(uploadError.message);
 
   const { data } = supabase.storage
     .from("product-images")
-    .getPublicUrl(fileName);
+    .getPublicUrl(filePath);
 
   image_url = data.publicUrl;
 }
+
 
   const { error } = await supabase
     .from("products_min")
@@ -533,13 +531,26 @@ stockBox.addEventListener("click", async (e) => {
       const card = document.createElement("div");
       card.className = "card";
 const unit = Number(p.avg_unit_price ?? 0);
+const placeholder =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+    <svg xmlns='http://www.w3.org/2000/svg' width='600' height='360'>
+      <rect width='100%' height='100%' fill='#f2f2f2'/>
+      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
+            fill='#777' font-family='Arial' font-size='28'>
+        No Image
+      </text>
+    </svg>
+  `);
+
+const imgSrc = p.image_url ? p.image_url : placeholder;
 
 card.innerHTML = `
   <h4>${p.name}</h4>
-  <div class="card-image">
-  <img src="${p.image_url || 'https://via.placeholder.com/300x180?text=No+Image'}"
-       alt="${p.name}">
+<div class="card-image">
+  <img src="${imgSrc}" alt="${p.name}">
 </div>
+
 
   <div class="card-actions">
     <button class="small-btn editQtyBtn" type="button"
@@ -591,6 +602,32 @@ form.addEventListener("submit", async (e) => {
   if (!Number.isFinite(price_paid) || price_paid < 0) return showError("Prezzo non valido.");
   if (!Number.isFinite(qty_purchased) || qty_purchased <= 0) return showError("Quantità non valida.");
 
+let image_url = null;
+
+if (imageFile.files && imageFile.files.length > 0) {
+  const file = imageFile.files[0];
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+
+  // IMPORTANTISSIMO: niente slash iniziale
+  const filePath = `products/${crypto.randomUUID()}.${ext}`;
+
+  const { data: upData, error: uploadError } = await supabase.storage
+    .from("product-images")
+    .upload(filePath, file, { upsert: false, contentType: file.type });
+
+  console.log("UPLOAD RESULT:", upData, uploadError);
+
+  if (uploadError) return showError(uploadError.message);
+
+  const { data: pub } = supabase.storage
+    .from("product-images")
+    .getPublicUrl(filePath);
+
+  image_url = pub.publicUrl;
+}
+
+
+  // ✅ RPC con image_url ora DEFINITA
   const { error } = await supabase.rpc("add_product_purchase", {
     p_name: name,
     p_price_paid: price_paid,
@@ -603,6 +640,7 @@ form.addEventListener("submit", async (e) => {
   await loadStock();
   closeModal();
 });
+
 
 
   // First load
