@@ -1,272 +1,76 @@
 <!doctype html>
 <html lang="it">
 <head>
+  <link rel="stylesheet" href="./css/style.css">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gestionale</title>
-  <style>
-:root {
-  --border: #e5e5e5;
-  --text: #111;
-  --muted: #666;
-  --danger: #d7263d;
-  --bg: #fff;
-  --overlay: rgba(0,0,0,0.45);
-}
-
-body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  color: var(--text);
-  background: #fafafa;
-}
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.title {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.topbar-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.fab {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 0;
-  cursor: pointer;
-  background: var(--danger);
-  color: #fff;
-  font-size: 24px;
-  line-height: 42px;
-  display: grid;
-  place-items: center;
-}
-
-.panel {
-  padding: 18px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 12px;
-}
-
-.card {
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-  background: var(--bg);
-}
-
-.card h4 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-}
-
-.card .row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 6px 0;
-  font-size: 14px;
-}
-
-.muted {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-/* Modal */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--overlay);
-  display: grid;
-  place-items: center;
-  padding: 18px;
-}
-
-.hidden { display: none; }
-
-.modal {
-  width: min(520px, 100%);
-  background: var(--bg);
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-  overflow: hidden;
-}
-
-.modal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.modal-head h2 {
-  margin: 0;
-  font-size: 16px;
-}
-
-.icon-btn {
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  padding: 8px 10px;
-  border-radius: 10px;
-}
-
-.form {
-  padding: 16px;
-  display: grid;
-  gap: 12px;
-}
-
-.form label {
-  display: grid;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--text);
-}
-
-.form input {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  outline: none;
-  font-size: 14px;
-  background: #fff;
-}
-
-.form input:focus {
-  border-color: #c9c9c9;
-}
-
-.msg {
-  min-height: 18px;
-  font-size: 13px;
-  color: #b00020;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 4px;
-}
-
-.btn {
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 10px 12px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.btn.primary {
-  border: 0;
-  background: #111;
-  color: #fff;
-}
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.small-btn {
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 8px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 13px;
-}
-.danger-btn {
-  border: 0;
-  background: var(--danger);
-  color: #fff;
-  width: 34px;
-  height: 34px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 16px;
-  display: grid;
-  place-items: center;
-}
-.card-image {
-  width: 100%;
-  height: 160px;
-  overflow: hidden;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  background: #f2f2f2;
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-
-  </style>
 </head>
 
 <body>
 <header class="topbar">
-  <h1 class="title">Tutti i prodotti</h1>
 
   <div class="topbar-actions">
-    <button id="addBtn" class="fab" type="button" aria-label="Aggiungi prodotto">+</button>
-  </div>
-</header>
 
+      <div id="cont"><img src="../images/imgLogo.jpg" id="imgLogo" width="100px"></div>
+  
+     <button id="homeBtn" class="navButton" >Home</button>
+      <button id="listButton" class="navButton" >Lista Prodotti</button>
+     <button id="addBtn" class="fab" type="button" aria-label="Aggiungi prodotto">+</button>
+  </div>
+
+</header>
+  <div id="linea"></div>
+<div id="filter">
+<div id="Filtri">
+<button id="btnFiltroTutti"type="button" class="ButtonFilter">TUTTI</button>
+<button id="btnFiltroVenduto"type="button" class="ButtonFilter">PRODOTTI IN MAGAZZINO</button>
+<button id="btnFiltroArchivio" type="button"class="ButtonFilter"> PRODOTTI IN ARCHIVIO</button>
+</div>
+
+
+
+
+</div>
 <main>
   <section class="panel">
     <div id="stockBox" class="cards"></div>
   </section>
 </main>
-<!-- MODAL EDIT QTY -->
+
+<!-- MODAL EDIT PRODUCT -->
 <div id="editOverlay" class="overlay hidden" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="editTitle">
     <div class="modal-head">
-      <h2 id="editTitle">Modifica quantità</h2>
+      <h2 id="editTitle">Modifica prodotto</h2>
       <button id="closeEditBtn" class="icon-btn" type="button" aria-label="Chiudi">✕</button>
     </div>
 
     <form id="editForm" class="form">
-      <div class="muted" id="editProductName"></div>
-
       <input id="editId" type="hidden" />
 
+      <div class="edit-preview">
+        <img id="editImg" alt="Anteprima immagine prodotto" />
+      </div>
+
       <label>
-        Nuova quantità
+        Nome prodotto
+        <input id="editName" type="text" required />
+      </label>
+
+      <label>
+        Totale pagato
+        <input id="editPrice" type="number" step="0.01" min="0" required />
+      </label>
+
+      <label>
+        Quantità totale
         <input id="editQty" type="number" step="0.01" min="0" required />
+      </label>
+
+      <label>
+        Cambia immagine (opzionale)
+        <input id="editImageFile" type="file" accept="image/*" />
       </label>
 
       <div id="editMsg" class="msg"></div>
@@ -278,6 +82,7 @@ body {
     </form>
   </div>
 </div>
+
 
 <!-- MODAL -->
 <div id="modalOverlay" class="overlay hidden" aria-hidden="true">
@@ -349,23 +154,60 @@ const editOverlay = document.getElementById("editOverlay");
 const closeEditBtn = document.getElementById("closeEditBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 const editForm = document.getElementById("editForm");
+
 const editId = document.getElementById("editId");
+const editName = document.getElementById("editName");
+const editPrice = document.getElementById("editPrice");
 const editQty = document.getElementById("editQty");
+const editImg = document.getElementById("editImg");
+const editImageFile = document.getElementById("editImageFile");
 const editMsg = document.getElementById("editMsg");
-const editProductName = document.getElementById("editProductName");
+
+const IMG_PLACEHOLDER =
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(`
+    <svg xmlns='http://www.w3.org/2000/svg' width='600' height='360'>
+      <rect width='100%' height='100%' fill='#f2f2f2'/>
+      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
+            fill='#777' font-family='Arial' font-size='28'>
+        No Image
+      </text>
+    </svg>
+  `);
+
 
 
 const imageFile = document.getElementById("imageFile");
 
-function openEditModal({ id, name, qty }) {
+function openEditModal({ id, name, qty, total, img }) {
   editOverlay.classList.remove("hidden");
   editOverlay.setAttribute("aria-hidden", "false");
   editMsg.textContent = "";
+
   editId.value = id;
+  editName.value = name;
   editQty.value = qty;
-  editProductName.textContent = `Prodotto: ${name}`;
-  setTimeout(() => editQty.focus(), 0);
+  editPrice.value = total;
+
+  editImg.src = img && img.length ? img : IMG_PLACEHOLDER;
+  editImageFile.value = "";
+
+  setTimeout(() => editName.focus(), 0);
 }
+
+
+
+closeEditBtn.addEventListener("click", closeEditModal);
+cancelEditBtn.addEventListener("click", closeEditModal);
+
+editOverlay.addEventListener("click", (e) => {
+  if (e.target === editOverlay) closeEditModal();
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !editOverlay.classList.contains("hidden")) closeEditModal();
+});
+
 
 editForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -437,37 +279,30 @@ window.addEventListener("keydown", (e) => {
 });
 
 stockBox.addEventListener("click", async (e) => {
-  const edit = e.target.closest(".editQtyBtn");
+  const edit = e.target.closest(".editBtn");
   if (edit) {
     openEditModal({
       id: edit.dataset.id,
       name: edit.dataset.name,
-      qty: edit.dataset.qty
+      qty: edit.dataset.qty,
+      total: edit.dataset.total,
+      img: edit.dataset.img
     });
     return;
   }
 
   const del = e.target.closest(".deleteBtn");
   if (del) {
-    const id = del.dataset.id;
-    const name = del.dataset.name;
-
-    const ok = window.confirm(`Eliminare definitivamente "${name}"?`);
+    const ok = window.confirm(`Eliminare definitivamente "${del.dataset.name}"?`);
     if (!ok) return;
 
-    const { error } = await supabase
-      .from("products_min")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
+    const { error } = await supabase.from("products_min").delete().eq("id", del.dataset.id);
+    if (error) return alert(error.message);
 
     await loadStock();
   }
 });
+
 
 
 
@@ -493,6 +328,46 @@ stockBox.addEventListener("click", async (e) => {
     form.reset();
     showError("");
   }
+editForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  editMsg.textContent = "";
+
+  const id = editId.value;
+  const name = editName.value.trim();
+  const total_paid = Number(editPrice.value);
+  const qty_total = Number(editQty.value);
+
+  if (!id) return (editMsg.textContent = "ID mancante.");
+  if (!name) return (editMsg.textContent = "Nome obbligatorio.");
+  if (!Number.isFinite(total_paid) || total_paid < 0) return (editMsg.textContent = "Totale pagato non valido.");
+  if (!Number.isFinite(qty_total) || qty_total < 0) return (editMsg.textContent = "Quantità non valida.");
+
+  // Upload nuova immagine (se scelta)
+  let image_url = null;
+  if (editImageFile.files && editImageFile.files.length > 0) {
+    const file = editImageFile.files[0];
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const filePath = `${session.user.id}/products/${crypto.randomUUID()}.${ext}`;
+
+    const { error: upErr } = await supabase.storage
+      .from("product-images")
+      .upload(filePath, file, { upsert: false, contentType: file.type });
+
+    if (upErr) return (editMsg.textContent = upErr.message);
+
+    const { data: pub } = supabase.storage.from("product-images").getPublicUrl(filePath);
+    image_url = pub.publicUrl;
+  }
+
+  const patch = { name, price_paid: total_paid, qty_purchased: qty_total };
+  if (image_url) patch.image_url = image_url;
+
+  const { error } = await supabase.from("products_min").update(patch).eq("id", id);
+  if (error) return (editMsg.textContent = error.message); // qui vedi anche errore duplicate name
+
+  await loadStock();
+  closeEditModal();
+});
 
   addBtn.addEventListener("click", openModal);
   closeModalBtn.addEventListener("click", closeModal);
@@ -507,13 +382,10 @@ stockBox.addEventListener("click", async (e) => {
   });
 
   async function loadStock() {
-    const { data, error } = await supabase
-.from("v_stock")
-.select("id,name,image_url,total_paid,qty_total,avg_unit_price,created_at")
-
-
-
-      .order("created_at", { ascending: false });
+const { data, error } = await supabase
+  .from("v_stock")
+  .select("id,name,image_url,total_paid,qty_total,avg_unit_price,created_at")
+  .order("created_at", { ascending: false });
 
     if (error) {
       stockBox.innerHTML = `<div class="muted">${error.message}</div>`;
@@ -547,25 +419,34 @@ const imgSrc = p.image_url ? p.image_url : placeholder;
 
 card.innerHTML = `
   <h4>${p.name}</h4>
-<div class="card-image">
-  <img src="${imgSrc}" alt="${p.name}">
-</div>
 
+  <div class="card-image">
+    <img src="${imgSrc}" alt="${p.name}">
+  </div>
 
-  <div class="card-actions">
-    <button class="small-btn editQtyBtn" type="button"
+  <div class="card-actions under-image">
+    <button class="small-btn editBtn" type="button"
       data-id="${p.id}"
       data-name="${p.name}"
-      data-qty="${p.qty_total}">
-      ✏️ Quantità
+      data-qty="${p.qty_total}"
+      data-total="${p.total_paid}"
+      data-img="${p.image_url || ""}">
+      ✏️ Modifica
     </button>
 
     <button class="danger-btn deleteBtn" type="button"
       data-id="${p.id}"
       data-name="${p.name}"
       aria-label="Elimina ${p.name}">
-      ✕
+      🗑️
     </button>
+  </div>
+
+  <h4>${p.name}</h4>
+
+
+
+
   </div>
   <div class="row">
     <span>Quantità</span>
