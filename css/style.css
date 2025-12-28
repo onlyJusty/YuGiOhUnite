@@ -26,20 +26,95 @@ body {
   background: #021526;
 }
 
-.topbar {
-  position: relative;
+.topbar{
+  position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1000;
   background: var(--bg);
+  border-radius: 0 0 20px 20px;
+
+  display: flex;
   align-items: center;
-  padding-left: 0px;
-  padding-top: 0px;
-  padding-right: 0px;
-  padding-bottom: 5px;
-  
-  border-radius: 0px 0px 20px 20px;
+  gap: 10px;
 
+  padding: 10px 12px;
+}
 
+/* Logo sempre a sinistra */
+.topbar-left{
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+/* Nav al centro, si adatta */
+.topbar-nav{
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex: 1 1 auto;
+
+  /* se lo spazio è poco: va a capo invece di sparire */
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* Bottoni nav: non troppo grandi su mobile */
+.navButton{
+  padding: 8px 10px;
+  border-radius: 12px;
+  width:40px;
+  border-width: 0px;
+  border-color: #021526;
+    font-family: "Oxanium-VariableFont_wght", system-ui, sans-serif;
+  width: 15vw;
+  height: 50px;
+font-size: 2vw;
+  border-radius: 0px;
+  background: var(--bg);
+  color: var(--BackInModal);
+
+    place-items: left;
+    align-items: left;}
+
+/* + SEMPRE in alto a destra */
+.fab{
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 2000;
+
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+
+  background: var(--danger);
+  color: #fff;
+  font-size: 26px;
+  line-height: 46px;
+  display: grid;
+  place-items: center;
+}
+
+/* Evita che il + copra i bottoni sotto di lui */
+.topbar{
+  padding-right: 70px; /* lascia spazio al pulsante fixed */
+}
+
+/* Mobile: riduci logo e spazi */
+@media (max-width: 600px){
+  #imgLogo{ width: 80px; }
+
+  .topbar{
+    padding: 8px 10px;
+    padding-right: 70px;
+  }
+
+  .topbar-nav{
+    gap: 8px;
+  }
 }
 
 .title {
@@ -63,21 +138,22 @@ display: flex;
 color: #c9c9c9;
 padding: 20px;
 
-background:#b00020;
+background:#0B8AD9;
 position: relative;
 margin: 20px;
 border-radius: 40px;
-border-color:#b00020;
+border-color:#0B8AD9;
 border-width: 0px;
 font-family: "Oxanium-VariableFont_wght", system-ui, sans-serif;
  font-size: 15px;
 text-align: center;
 }
+
+
 .topbar-actions {
  display: flex;
-  place-items: center;
-
-  gap: 0px;
+align-items: center;
+  
   
 }
 #cont{
@@ -94,33 +170,31 @@ right: 20px;
 border-radius: 20px;
 }
 
-.navButton {  
-    font-family: "Oxanium-VariableFont_wght", system-ui, sans-serif;
-  width: 150px;
-  height: 50px;
-  border-width: 0px;
-  border-radius: 20px;
-  background: var(--bg);
-  color: var(--BackInModal);
-  font-size: 20px;
-    place-items: left;
-    align-items: left;}
+
 
 .fab {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 0;
-  position: absolute;
-  right:15px;
-  cursor: pointer;
-  background: var(--danger);
+  top: 24px;        /* distanza dall’alto */
+  right: 24px;      /* sempre a destra */
+  z-index: 1000;
+
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+
+  background: #F2B544;   /* rosso */
   color: #fff;
-  font-size: 24px;
-  line-height: 42px;
-  display: grid;
-  place-items: center;
+  font-size: 32px;
+  font-weight: 500;
+
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
+
+.fab:hover {
+  background: #cc9838;
+}
+
 
 .panel {
   padding: 18px;

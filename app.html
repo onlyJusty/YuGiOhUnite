@@ -9,17 +9,18 @@
 
 <body>
 <header class="topbar">
-
-  <div class="topbar-actions">
-
-      <div id="cont"><img src="./images/imgLogo.jpg" id="imgLogo" width="100px"></div>
-  
-     <button id="homeBtn" class="navButton" >Home</button>
-      <button id="listButton" class="navButton" >Lista Prodotti</button>
-     <button id="addBtn" class="fab" type="button" aria-label="Aggiungi prodotto">+</button>
+  <div class="topbar-left">
+    <img src="./images/imgLogo.jpg" id="imgLogo" width="100" alt="Logo">
   </div>
 
+  <nav class="topbar-nav">
+    <button id="homeBtn" class="navButton">Home</button>
+    <button id="listButton" class="navButton">Lista Prodotti</button>
+  </nav>
+
+  <button id="addBtn" class="fab" type="button" aria-label="Aggiungi prodotto">+</button>
 </header>
+
   <div id="linea"></div>
 <div id="filter">
 <div id="Filtri">
@@ -538,6 +539,5 @@ if (imageFile.files && imageFile.files.length > 0) {
   .subscribe();
 
 </script>
-
 
 </html>
