@@ -98,6 +98,88 @@ font-size: 2vw;
   place-items: center;
 }
 
+.ButtonFilter.active {
+  background: #111;
+  color: #fff;
+  border: 0;
+}
+
+.card-actions.under-image {
+  display: flex;
+  flex-direction: column;   /* 🔑 due righe */
+  gap: 10px;
+}
+
+/* RIGA 1: pulsanti */
+.card-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- FIX testo checkbox sempre visibile --- */
+.card-status-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 18px !important;
+  flex-wrap: wrap !important;
+}
+
+.card-check {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+
+  font-size: 14px !important;   /* evita font-size 0 ereditato */
+  line-height: 1.2 !important;
+  color: #111 !important;        /* evita testo trasparente */
+  white-space: nowrap !important;
+}
+
+.card-check span {
+  display: inline !important;    /* evita display:none */
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 600px) {
+  .card-check {
+    font-size: 1px;
+  }
+}
+
+.badge-venduto {
+  display: inline-block;
+  align-self: flex-start;
+
+  background: #c62828;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  margin-bottom: 6px;
+}
+
+
+.check-label {
+  font-weight: 500;
+}
+
+.check-status {
+  font-size: 12px;
+  color: #666;
+}
+
+input:checked + .check-label + .check-status {
+  color: #2e7d32; /* verde */
+  font-weight: 600;
+}
+
+
 /* Evita che il + copra i bottoni sotto di lui */
 .topbar{
   padding-right: 70px; /* lascia spazio al pulsante fixed */
@@ -128,24 +210,24 @@ font-size: 2vw;
 border-color: #b00020;
 padding-top: 50px;
 padding-bottom:20px;
-  justify-content: center;
-  align-items: center;
+  justify-content:center;
+  align-items:center;
 display: flex;
 
 }
 
 .ButtonFilter{
 color: #c9c9c9;
-padding: 20px;
-
+padding: 15px;
+width:100px;
 background:#0B8AD9;
 position: relative;
-margin: 20px;
+margin: 10px;
 border-radius: 40px;
 border-color:#0B8AD9;
 border-width: 0px;
 font-family: "Oxanium-VariableFont_wght", system-ui, sans-serif;
- font-size: 15px;
+ font-size: 12px;
 text-align: center;
 }
 
@@ -214,6 +296,7 @@ border-radius: 20px;
 }
 
 .card h4 {
+  color: var(--TextInModal);
   margin: 0 0 10px 0;
   font-size: 16px;
 }

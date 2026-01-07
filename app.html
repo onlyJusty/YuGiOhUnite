@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="it">
 <head>
-    <link rel="icon" type="image/png" href="./images/imgLogo.jpg">
+  <link rel="icon" type="image/png" href="./images/imgLogo.jpg">
+
   <link rel="stylesheet" href="./css/style.css">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -25,9 +26,11 @@
   <div id="linea"></div>
 <div id="filter">
 <div id="Filtri">
-<button id="btnFiltroTutti"type="button" class="ButtonFilter">TUTTI</button>
-<button id="btnFiltroVenduto"type="button" class="ButtonFilter">PRODOTTI IN MAGAZZINO</button>
-<button id="btnFiltroArchivio" type="button"class="ButtonFilter"> PRODOTTI IN ARCHIVIO</button>
+  <button id="btnFiltroVenduto"type="button" class="ButtonFilter">STORE</button>
+<button id="btnFiltroArchivio" type="button"class="ButtonFilter">VENDUTI</button>
+  <button id="btnFiltroTutti"type="button" class="ButtonFilter">TUTTI</button>
+
+
 </div>
 
 
@@ -126,6 +129,8 @@
 
 </body>
  <script type="module">
+  let currentFilter = "all"; // "all" | "warehouse" | "archive"
+
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
     const SUPABASE_URL = "https://vrxctmrnumkzswdnvjbp.supabase.co";
@@ -144,6 +149,33 @@
   const overlay = document.getElementById("modalOverlay");
   const closeModalBtn = document.getElementById("closeModalBtn");
   const cancelBtn = document.getElementById("cancelBtn");
+const btnFiltroTutti = document.getElementById("btnFiltroTutti");
+const btnFiltroVenduto = document.getElementById("btnFiltroVenduto");   // MAGAZZINO
+const btnFiltroArchivio = document.getElementById("btnFiltroArchivio"); // ARCHIVIO
+
+btnFiltroTutti.addEventListener("click", async () => {
+  currentFilter = "all";
+
+updateFilterUI();
+
+
+  await loadStock();
+});
+
+btnFiltroVenduto.addEventListener("click", async () => {
+  currentFilter = "warehouse";
+  updateFilterUI();
+  await loadStock();
+});
+
+btnFiltroArchivio.addEventListener("click", async () => {
+  currentFilter = "archive";
+
+updateFilterUI();
+
+
+  await loadStock();
+});
 
   const form = document.getElementById("productForm");
   const msg = document.getElementById("formMsg");
@@ -370,10 +402,60 @@ editForm.addEventListener("submit", async (e) => {
   await loadStock();
   closeEditModal();
 });
+stockBox.addEventListener("change", async (e) => {
+  const sale = e.target.closest(".saleCheckbox");
+  const delivered = e.target.closest(".deliveredCheckbox");
+  if (!sale && !delivered) return;
+
+  const id = e.target.dataset.id;
+
+  // trova entrambe le checkbox della stessa card
+  const card = e.target.closest(".card");
+  const saleEl = card.querySelector(".saleCheckbox");
+  const delEl = card.querySelector(".deliveredCheckbox");
+
+  // stato richiesto
+  let in_vendita = saleEl.checked;
+  let consegnato = delEl.checked;
+
+  // UX: se consegnato=true allora in_vendita=false (coerente)
+  if (consegnato) {
+    in_vendita = false;
+    saleEl.checked = false;
+  }
+
+  // blocca input mentre salva
+  saleEl.disabled = true;
+  delEl.disabled = true;
+
+  const { error } = await supabase.rpc("set_product_status", {
+    p_product_id: id,
+    p_in_vendita: in_vendita,
+    p_consegnato: consegnato
+  });
+
+  saleEl.disabled = false;
+  delEl.disabled = false;
+
+  if (error) {
+    alert(error.message);
+    // rollback UI (ricarichiamo)
+    await loadStock();
+    return;
+  }
+
+  // opzionale: non serve ricaricare tutto, ma per ora è ok
+  await loadStock();
+});
 
   addBtn.addEventListener("click", openModal);
   closeModalBtn.addEventListener("click", closeModal);
   cancelBtn.addEventListener("click", closeModal);
+function updateFilterUI() {
+  btnFiltroTutti.classList.toggle("active", currentFilter === "all");
+  btnFiltroVenduto.classList.toggle("active", currentFilter === "warehouse");
+  btnFiltroArchivio.classList.toggle("active", currentFilter === "archive");
+}
 
   overlay.addEventListener("click", (e) => {
     if (e.target === overlay) closeModal();
@@ -384,10 +466,18 @@ editForm.addEventListener("submit", async (e) => {
   });
 
   async function loadStock() {
-const { data, error } = await supabase
+let q = supabase
   .from("v_stock")
-  .select("id,name,image_url,total_paid,qty_total,avg_unit_price,created_at")
-  .order("created_at", { ascending: false });
+  .select("id,name,image_url,in_vendita,consegnato,total_paid,qty_total,avg_unit_price,created_at");
+
+if (currentFilter === "warehouse") {
+  q = q.eq("consegnato", false);
+} else if (currentFilter === "archive") {
+  q = q.eq("consegnato", true);
+}
+
+const { data, error } = await q.order("created_at", { ascending: false });
+
 
     if (error) {
       stockBox.innerHTML = `<div class="muted">${error.message}</div>`;
@@ -421,12 +511,16 @@ const imgSrc = p.image_url ? p.image_url : placeholder;
 
 card.innerHTML = `
   <h4>${p.name}</h4>
+${p.consegnato ? `<div class="badge-venduto">VENDUTO</div>` : ""}
 
   <div class="card-image">
     <img src="${imgSrc}" alt="${p.name}">
   </div>
 
-  <div class="card-actions under-image">
+<div class="card-actions under-image">
+
+  <!-- RIGA 1: AZIONI -->
+  <div class="card-actions-row">
     <button class="small-btn editBtn" type="button"
       data-id="${p.id}"
       data-name="${p.name}"
@@ -444,7 +538,29 @@ card.innerHTML = `
     </button>
   </div>
 
-  <h4>${p.name}</h4>
+  <!-- RIGA 2: STATI -->
+  <div class="card-status-row">
+    <label class="card-check">
+      <input type="checkbox"
+        class="saleCheckbox"
+        data-id="${p.id}"
+        ${p.in_vendita ? "checked" : ""}>
+      <span>Caricato</span>
+    </label>
+
+    <label class="card-check">
+      <input type="checkbox"
+        class="deliveredCheckbox"
+        data-id="${p.id}"
+        ${p.consegnato ? "checked" : ""}>
+      <span>Venduto</span>
+    </label>
+  </div>
+
+</div>
+
+
+
 
 
 
@@ -524,7 +640,8 @@ if (imageFile.files && imageFile.files.length > 0) {
   closeModal();
 });
 
-
+  currentFilter = "warehouse";
+updateFilterUI();
 
   // First load
   await loadStock();
@@ -541,6 +658,4 @@ if (imageFile.files && imageFile.files.length > 0) {
 
 </script>
 
-
 </html>
-
